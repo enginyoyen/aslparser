@@ -1,7 +1,10 @@
 language: go
 
 go:
-  - 1.4.2
+  - "1.14"
+
+before_install:
+  - go get github.com/xeipuuv/gojsonschema
 
 script:
   - go test
