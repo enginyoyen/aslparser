@@ -6,21 +6,25 @@
 
 package aslparser
 
-import "github.com/xeipuuv/gojsonschema"
+import (
+	"github.com/enginyoyen/aslparser/static"
+	"github.com/xeipuuv/gojsonschema"
+)
 
 // Loads the state-machine JSON file from provided path
 // and validates it against states-language schema
+// strict argument defines whether Resource name must be AWS ARN pattern or not
 // See https://states-language.net/spec.html
-func Validate(payload []byte) (*gojsonschema.Result, error) {
-	result, err := validateSchema(payload)
+func Validate(payload []byte, strict bool) (*gojsonschema.Result, error) {
+	result, err := validateSchema(payload, strict)
 	if err != nil {
 		return result, err
 	}
 	return result, nil
 }
 
-func validateSchema(payload []byte) (*gojsonschema.Result, error) {
-	stateMachineSchema, assetError := stateMachineSchema()
+func validateSchema(payload []byte, strict bool) (*gojsonschema.Result, error) {
+	stateMachineSchema, assetError := stateMachineSchema(strict)
 	if assetError != nil {
 		return nil, assetError
 	}
@@ -31,6 +35,11 @@ func validateSchema(payload []byte) (*gojsonschema.Result, error) {
 	return result, err
 }
 
-func stateMachineSchema() ([]byte, error) {
-	return Asset("schemas/state-machine.json")
+func stateMachineSchema(strict bool) ([]byte, error) {
+	if strict {
+		return static.Asset("schemas/state-machine-strict-arn.json")
+	} else {
+		return static.Asset("schemas/state-machine.json")
+	}
+
 }

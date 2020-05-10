@@ -30,7 +30,7 @@ func Test(t *testing.T) {
 
 func runValidCase(t *testing.T, path string, name string) {
 	payload, _ := ioutil.ReadFile(path)
-	validate, _ := Validate(payload)
+	validate, _ := Validate(payload, true)
 	if !validate.Valid() {
 		t.Errorf("Failed validation, where as suppose to pass for input %s", name)
 	}
@@ -38,7 +38,7 @@ func runValidCase(t *testing.T, path string, name string) {
 
 func runInvalidCase(t *testing.T, path string, name string) {
 	payload, _ := ioutil.ReadFile(path)
-	validate, _ := Validate(payload)
+	validate, _ := Validate(payload, true)
 	if validate.Valid() {
 		t.Errorf("Validation pass, where as suppose to fail for input %s", name)
 	}
@@ -71,4 +71,26 @@ func collectFileInfo() ([]string, []string) {
 		panic(fileErr)
 	}
 	return fileName, filePath
+}
+
+
+func TestStrictMode(t *testing.T) {
+	name := "task-alias-function"
+
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err.Error())
+	}
+	path := filepath.Join(wd, "testdata", "definitions","invalid-task-alias-function.json")
+	payload, _ := ioutil.ReadFile(path)
+
+	strictValidationResult, _ := Validate(payload, true)
+	if strictValidationResult.Valid() {
+		t.Errorf("ARN validation pass, where as suppose to fail for input %s", name)
+	}
+	///
+	loseValidationResult, _ := Validate(payload, false)
+	if !loseValidationResult.Valid() {
+		t.Errorf("Failed validation, where as suppose to pass for input %s", name)
+	}
 }

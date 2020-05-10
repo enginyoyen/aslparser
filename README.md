@@ -11,8 +11,20 @@ go get github.com/enginyoyen/aslparser
 ```
 
 ## Usage 
+First argument is the file content to be validated, while the second argument is whether it should use strict mode for validation
 ```
-stateMachine, err := aslparser.Parse(filePath)
+stateMachine, err := aslparser.Parse(filePath, true)
+if !stateMachine.Valid() {
+	for _, e := range stateMachine.Errors(){
+		fmt.Print(e.Description())
+	}
+}
+```
+
+Alternatively, `ParseFile` method uses file path to load and validate 
+
+```
+stateMachine, err := aslparser.ParseFile(filePath, true)
 if !stateMachine.Valid() {
 	for _, e := range stateMachine.Errors(){
 		fmt.Print(e.Description())
@@ -23,7 +35,8 @@ if !stateMachine.Valid() {
 ## Converting JSON Schema to a static file
 JSON schema is converted to an static go file to be included as an executable.
 ```
-go-bindata -o state_machine_bin.go schemas/state-machine.json 
+go-bindata -o state_machine_bin.go schemas/state-machine.json schemas/state-machine-strict-arn.json
+
 ```
 
 ## JSON Schema 

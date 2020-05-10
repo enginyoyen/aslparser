@@ -48,24 +48,31 @@ type StateMachine struct {
 }
 
 // Given the file path validates and returns the StateMachine
-func Parse(filepath string) (*StateMachine, error) {
+// strict argument defines whether Resource name must be AWS ARN pattern or not
+func ParseFile(filepath string, strict bool) (*StateMachine, error) {
 	//load file
 	payload, fileErr := ioutil.ReadFile(filepath)
 	if fileErr != nil {
 		return nil, fileErr
 	}
+	return Parse(payload, strict)
+}
+
+// Given the file content validates and returns the StateMachine
+// strict argument defines whether Resource name must be AWS ARN pattern or not
+func Parse(content []byte, strict bool) (*StateMachine, error) {
 
 	// validate it, if there is an error or document is not Valid
 	// return the result without further analysis
 	var stateMachine StateMachine
-	validationResult, valErr := Validate(payload)
+	validationResult, valErr := Validate(content, strict)
 	stateMachine.validationResult = validationResult
 	if valErr != nil || !validationResult.Valid() {
 		return &stateMachine, valErr
 	}
 
 	// given state-machine payload is valid, unmarshal the json file
-	unmarshalErr := json.Unmarshal(payload, &stateMachine)
+	unmarshalErr := json.Unmarshal(content, &stateMachine)
 	if unmarshalErr != nil {
 		return &stateMachine, unmarshalErr
 	}

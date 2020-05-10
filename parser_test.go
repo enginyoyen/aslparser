@@ -28,7 +28,7 @@ func TestParse(t *testing.T) {
 }
 
 func runInvalidParseCase(t *testing.T, path string, name string) {
-	stateMachine, _ := Parse(path)
+	stateMachine, _ := ParseFile(path, true)
 	if stateMachine.Valid() {
 		t.Errorf("Validation passed, where as suppose to fail for input %s", name)
 	}
