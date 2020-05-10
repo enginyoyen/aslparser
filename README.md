@@ -2,7 +2,7 @@
 Package `aslparser` validates and parses the Amazon States Language, that is used for step functions.
 See [https://states-language.net/spec.html](https://states-language.net/spec.html) for details.
 
-[![Build Status](https://travis-ci.com/enginyoyen/aslparser.svg?branch=master)](https://travis-ci.com/enginyoyen/strmetric)
+[![Build Status](https://travis-ci.com/enginyoyen/aslparser.svg?branch=master)](https://travis-ci.com/enginyoyen/aslparser)
 
 
 ## Installation 
